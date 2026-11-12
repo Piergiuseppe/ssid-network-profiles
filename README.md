@@ -1,6 +1,6 @@
-# ssid-network-profiles
+# WiFi Profili: per-network static IP, router and DNS for macOS
 
-A macOS menu bar app that applies a static IP, router and DNS servers based on the Wi-Fi network you are connected to. Keep several profiles per network, switch between them with one click, and fall back to DHCP everywhere else. Profiles can be exported to a file and imported on another Mac.
+A macOS menu bar app that automatically applies a static IP address, router and DNS servers based on the Wi-Fi network (SSID) you are connected to. Keep several network profiles per SSID, switch between them with one click, and fall back to DHCP everywhere else. Profiles can be exported to a file and imported on another Mac.
 
 **[Download the latest release](https://github.com/Piergiuseppe/ssid-network-profiles/releases/latest)**
 
@@ -23,6 +23,10 @@ Releases are built by GitHub Actions from the matching tag, never uploaded by ha
 ```bash
 shasum -a 256 WiFi-Profili-<version>.dmg
 ```
+
+## Why an app and not a script
+
+Recent macOS versions no longer let scripts read the current Wi-Fi network name: `networksetup -getairportnetwork` answers `You are not associated with an AirPort network` and `ipconfig getsummary` prints `SSID : <redacted>`. Only an app holding the Location permission can read the SSID, which this one does through CoreWLAN before applying the profile with `networksetup`.
 
 ## Build
 
