@@ -8,12 +8,31 @@ struct Profile: Codable, Identifiable, Equatable {
     var subnet: String
     var gateway: String
     var dns: [String]
+
+    var isValid: Bool {
+        !name.isEmpty && !ssid.isEmpty
+            && [ip, subnet, gateway].allSatisfy(IPv4.isValid)
+            && dns.allSatisfy(IPv4.isValid)
+    }
 }
 
 struct StoreData: Codable {
     var profiles: [Profile] = []
     var active: [String: UUID] = [:]
     var autoApply = true
+
+    mutating func merge(_ other: StoreData) {
+        for profile in other.profiles where profile.isValid {
+            if let index = profiles.firstIndex(where: { $0.id == profile.id }) {
+                profiles[index] = profile
+            } else {
+                profiles.append(profile)
+            }
+        }
+        for (ssid, id) in other.active where profiles.contains(where: { $0.id == id && $0.ssid == ssid }) {
+            active[ssid] = id
+        }
+    }
 }
 
 struct LiveConfig: Equatable {

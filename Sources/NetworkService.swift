@@ -61,7 +61,7 @@ enum NetworkService {
     private static func check(_ result: (status: Int32, output: String)) throws {
         let output = result.output.trimmingCharacters(in: .whitespacesAndNewlines)
         if result.status != 0 || output.contains("Error") || output.contains("requires") {
-            throw NetworkError(message: output.isEmpty ? "networksetup ha restituito \(result.status)" : output)
+            throw NetworkError(message: output.isEmpty ? "\(String(localized: "networksetup failed")) (\(result.status))" : output)
         }
     }
 

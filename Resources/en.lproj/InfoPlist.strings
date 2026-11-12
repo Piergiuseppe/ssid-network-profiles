@@ -1,0 +1,2 @@
+"NSLocationUsageDescription" = "Needed to read the Wi-Fi network name and apply the matching profile.";
+"NSLocationWhenInUseUsageDescription" = "Needed to read the Wi-Fi network name and apply the matching profile.";

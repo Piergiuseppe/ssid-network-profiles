@@ -2,6 +2,7 @@ import AppKit
 import CoreLocation
 import CoreWLAN
 import ServiceManagement
+import UniformTypeIdentifiers
 
 @MainActor
 final class AppState: NSObject, ObservableObject {
@@ -105,6 +106,33 @@ final class AppState: NSObject, ObservableObject {
         launchAtLogin = SMAppService.mainApp.status == .enabled
     }
 
+    func exportProfiles() {
+        let panel = NSSavePanel()
+        panel.allowedContentTypes = [.json]
+        panel.nameFieldStringValue = "wifi-profiles.json"
+        NSApp.activate(ignoringOtherApps: true)
+        guard panel.runModal() == .OK, let url = panel.url else { return }
+        do {
+            try store.write(data, to: url)
+        } catch {
+            alert(error.localizedDescription)
+        }
+    }
+
+    func importProfiles() {
+        let panel = NSOpenPanel()
+        panel.allowedContentTypes = [.json]
+        NSApp.activate(ignoringOtherApps: true)
+        guard panel.runModal() == .OK, let url = panel.url else { return }
+        guard let imported = try? store.read(from: url) else {
+            alert(String(localized: "The file is not a valid profile export."))
+            return
+        }
+        data.merge(imported)
+        persist()
+        scheduleRefresh(after: 0)
+    }
+
     func openLocationSettings() {
         if let url = URL(string: "x-apple.systempreferences:com.apple.preference.security?Privacy_LocationServices") {
             NSWorkspace.shared.open(url)
@@ -118,6 +146,13 @@ final class AppState: NSObject, ObservableObject {
             guard !Task.isCancelled else { return }
             await self?.refresh(force: force)
         }
+    }
+
+    private func alert(_ message: String) {
+        let alert = NSAlert()
+        alert.alertStyle = .warning
+        alert.messageText = message
+        alert.runModal()
     }
 
     private func persist() {

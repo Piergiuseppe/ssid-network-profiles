@@ -2,6 +2,8 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+    <key>CFBundleDevelopmentRegion</key>
+    <string>en</string>
     <key>CFBundleName</key>
     <string>WiFi Profili</string>
     <key>CFBundleDisplayName</key>
@@ -21,8 +23,8 @@
     <key>LSUIElement</key>
     <true/>
     <key>NSLocationUsageDescription</key>
-    <string>Serve per leggere il nome della rete Wi-Fi e applicare il profilo giusto.</string>
+    <string>Needed to read the Wi-Fi network name and apply the matching profile.</string>
     <key>NSLocationWhenInUseUsageDescription</key>
-    <string>Serve per leggere il nome della rete Wi-Fi e applicare il profilo giusto.</string>
+    <string>Needed to read the Wi-Fi network name and apply the matching profile.</string>
 </dict>
 </plist>

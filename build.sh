@@ -8,8 +8,9 @@ BINARY="$APP/Contents/MacOS/WiFiProfili"
 VERSION="${VERSION:-$(/usr/libexec/PlistBuddy -c "Print :CFBundleShortVersionString" Info.plist)}"
 
 rm -rf build dist
-mkdir -p "$APP/Contents/MacOS"
+mkdir -p "$APP/Contents/MacOS" "$APP/Contents/Resources"
 cp Info.plist "$APP/Contents/Info.plist"
+cp -R Resources/*.lproj "$APP/Contents/Resources/"
 /usr/libexec/PlistBuddy -c "Set :CFBundleShortVersionString $VERSION" "$APP/Contents/Info.plist"
 
 for ARCH in arm64 x86_64; do
@@ -29,10 +30,12 @@ install)
     open "$DEST"
     ;;
 package)
-    ZIP="WiFi-Profili-$VERSION.zip"
-    mkdir -p dist
-    ditto -c -k --keepParent "$APP" "dist/$ZIP"
-    (cd dist && shasum -a 256 "$ZIP" > "$ZIP.sha256")
-    cat "dist/$ZIP.sha256"
+    DMG="WiFi-Profili-$VERSION.dmg"
+    mkdir -p dist build/dmg
+    cp -R "$APP" build/dmg/
+    ln -s /Applications build/dmg/Applications
+    hdiutil create -quiet -volname "$NAME" -srcfolder build/dmg -format UDZO "dist/$DMG"
+    (cd dist && shasum -a 256 "$DMG" > "$DMG.sha256")
+    cat "dist/$DMG.sha256"
     ;;
 esac
