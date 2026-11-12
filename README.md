@@ -18,11 +18,10 @@ On first launch macOS asks for the Location permission, which it requires from a
 
 ## Verify the download
 
-Releases are built by GitHub Actions from the matching tag, never uploaded by hand.
+Releases are built by GitHub Actions from the matching tag, never uploaded by hand. To check your download, print its SHA-256 hash and compare it with the one GitHub shows next to the file on the release page:
 
 ```bash
-shasum -a 256 -c WiFi-Profili-<version>.zip.sha256
-gh attestation verify WiFi-Profili-<version>.zip --repo Piergiuseppe/ssid-network-profiles
+shasum -a 256 WiFi-Profili-<version>.zip
 ```
 
 ## Build
